@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes.actions import router as actions_router
+from app.api.routes.agents import router as agents_router
 from app.api.routes.analysis import router as analysis_router
 from app.api.routes.approval import router as approval_router
 from app.api.routes.calendar import router as calendar_router
@@ -46,6 +47,7 @@ app.add_middleware(
 )
 
 app.include_router(analysis_router)
+app.include_router(agents_router)
 app.include_router(approval_router)
 app.include_router(actions_router)
 app.include_router(calendar_router)
