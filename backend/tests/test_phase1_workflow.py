@@ -250,8 +250,8 @@ def test_fastapi_analysis_start_endpoint(monkeypatch):
     """Verify POST /api/analysis/start and GET /api/analysis/{id} via TestClient."""
     mock_llm = MockDayShieldLlm(call_log=[])
 
-    async def _mock_run(request: AnalysisStartRequest, analysis_id: str | None = None):
-        return await run_analysis_workflow(request, analysis_id=analysis_id, model=mock_llm)
+    async def _mock_run(request: AnalysisStartRequest, analysis_id: str | None = None, event_callback=None):
+        return await run_analysis_workflow(request, analysis_id=analysis_id, model=mock_llm, event_callback=event_callback)
 
     monkeypatch.setattr("app.api.routes.analysis.run_analysis_workflow", _mock_run)
 

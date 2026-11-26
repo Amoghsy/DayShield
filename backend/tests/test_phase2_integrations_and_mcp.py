@@ -181,8 +181,8 @@ def test_simulation_run_endpoint(monkeypatch):
     """Verify POST /api/simulation/run?scenario=scenario_b returns 200 and simulation_mode=True."""
     mock_llm = MockDayShieldLlm(call_log=[])
 
-    async def _mock_run(request, analysis_id=None):
-        return await run_analysis_workflow(request, analysis_id=analysis_id, model=mock_llm)
+    async def _mock_run(request, analysis_id=None, event_callback=None):
+        return await run_analysis_workflow(request, analysis_id=analysis_id, model=mock_llm, event_callback=event_callback)
 
     monkeypatch.setattr("app.api.routes.simulation.run_analysis_workflow", _mock_run)
 
