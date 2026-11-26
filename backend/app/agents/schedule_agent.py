@@ -8,6 +8,7 @@ from google.adk.models.base_llm import BaseLlm
 from app.agents.prompts import SCHEDULE_AGENT_INSTRUCTION
 from app.api.schemas.analysis import ScheduleAssessment
 from app.config import get_settings
+from app.mcp_servers.client import create_dayshield_mcp_toolset
 
 
 def get_today_schedule_context(
@@ -94,15 +95,29 @@ def get_today_schedule_context(
     }
 
 
-def create_schedule_agent(model: str | BaseLlm | None = None) -> Agent:
+def create_schedule_agent(
+    model: str | BaseLlm | None = None,
+    use_mcp: bool = False,
+) -> Agent:
     """Create the Schedule Agent (ADK Agent with structured ScheduleAssessment output)."""
     settings = get_settings()
+    tools: list = [get_today_schedule_context]
+    if use_mcp:
+        tools.append(
+            create_dayshield_mcp_toolset(
+                tool_filter=[
+                    "get_today_events",
+                    "get_event_details",
+                    "get_available_slots",
+                ]
+            )
+        )
     return Agent(
         name="schedule_agent",
         model=model or settings.gemini_model,
         description="Inspects today's calendar commitments, lateness, and free slots.",
         instruction=SCHEDULE_AGENT_INSTRUCTION,
-        tools=[get_today_schedule_context],
+        tools=tools,
         output_schema=ScheduleAssessment,
         output_key="schedule_assessment",
         disallow_transfer_to_parent=True,

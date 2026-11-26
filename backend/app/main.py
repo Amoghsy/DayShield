@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes.analysis import router as analysis_router
+from app.api.routes.simulation import router as simulation_router
 from app.config import get_settings
 
 settings = get_settings()
@@ -29,6 +30,7 @@ app.add_middleware(
 )
 
 app.include_router(analysis_router)
+app.include_router(simulation_router)
 
 
 @app.get("/health", tags=["Health"])

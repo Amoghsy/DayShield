@@ -105,10 +105,13 @@ async def merge_impact_assessments(ctx: Context) -> dict[str, Any]:
     return {"impact_merge": merged.model_dump()}
 
 
-def build_dayshield_workflow(model: str | BaseLlm | None = None) -> Workflow:
+def build_dayshield_workflow(
+    model: str | BaseLlm | None = None,
+    use_mcp: bool = False,
+) -> Workflow:
     """Construct the DayShield ADK graph Workflow with parallel + sequential stages."""
-    commute_agent = create_commute_agent(model=model)
-    schedule_agent = create_schedule_agent(model=model)
+    commute_agent = create_commute_agent(model=model, use_mcp=use_mcp)
+    schedule_agent = create_schedule_agent(model=model, use_mcp=use_mcp)
     priority_agent = create_priority_agent(model=model)
     recovery_agent = create_recovery_agent(model=model)
     impact_join = JoinNode(name="impact_join")
